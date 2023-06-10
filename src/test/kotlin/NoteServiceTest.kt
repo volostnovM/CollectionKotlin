@@ -29,6 +29,12 @@ class NoteServiceTest {
         assertEquals(commentList, result)
     }
 
+    @org.junit.Test(expected = NoteNotFoundException::class)
+    fun createCommentNotFindNote() {
+        NoteService.add("Первая заметка", "Не забудь купить хлеб", 0)
+        NoteService.createComment(10, "test msg")
+    }
+
     @org.junit.Test
     fun delete() {
         NoteService.add("Первая заметка", "Не забудь купить хлеб", 0)

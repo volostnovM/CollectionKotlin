@@ -14,8 +14,11 @@ object NoteService {
     }
 
     fun createComment(noteId: Int, message: String) {
+        var isFind = false
+
         for (noteFind in notesList) {
             if (noteId == noteFind.id) {
+                isFind = true
                 if (noteFind.comments.isEmpty()) {
                     val newComment = Comment(0, noteId, message, false)
                     noteFind.comments.add(newComment)
@@ -24,6 +27,10 @@ object NoteService {
                     noteFind.comments.add(newComment)
                 }
             }
+        }
+
+        if (!isFind) {
+            throw NoteNotFoundException("Упс, такой заметки в списке нет...")
         }
     }
 
@@ -37,14 +44,20 @@ object NoteService {
     }
 
     fun deleteComment(noteId: Int, commentId: Int) {
+        var isFind = false
         for (noteFind in notesList) {
             if (noteId == noteFind.id) {
+                isFind = true
                 for (commentFind in noteFind.comments) {
                     if (commentId == commentFind.id && !commentFind.isDelete) {
                         commentFind.isDelete = true
                     }
                 }
             }
+        }
+
+        if (!isFind) {
+            throw NoteNotFoundException("Упс, такой заметки в списке нет...")
         }
     }
 
@@ -72,6 +85,20 @@ object NoteService {
 
     fun getAllNotes(): MutableList<Note> {
         return notesList
+    }
+
+    fun <T> getDataById (id: Int, collectionData: MutableList<T>?): T? {
+        if (collectionData == null) {
+            return null
+        }
+        for (data in collectionData) {
+            if (data is Note && id == data.id) {
+                return data
+            } else if(data is Comment && id == data.id && !data.isDelete) {
+                return data
+            }
+        }
+        return null
     }
 
     fun getById(noteId: Int): Note? {

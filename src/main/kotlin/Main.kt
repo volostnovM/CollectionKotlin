@@ -7,6 +7,12 @@ fun main() {
     NoteService.createComment(1, "ржаной")
     println(NoteService.getAllNotes())
 
+    println("------")
+    println(NoteService.getDataById(1,NoteService.getAllNotes()))
+    println("------")
+    println(NoteService.getDataById(1,NoteService.getComments(1)))
+    println("------")
+
     NoteService.delete(2)
     println(NoteService.getAllNotes())
 
